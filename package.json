@@ -4,9 +4,9 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start": "nodemon server/server.js",
+    "start": "nodemon --delay 500ms server/server.js",
     "build": "NODE_ENV=production webpack",
-    "dev": "concurrently \"cross-env NODE_ENV=development webpack-dev-server --open\" \"NODE_ENV=production nodemon ./server/server.js\"",
+    "dev": "concurrently \"cross-env NODE_ENV=development webpack-dev-server --open\" \"NODE_ENV=production nodemon --delay 500ms ./server/server.js\"",
     "gulp-prod": "node_modules/.bin/gulp prod",
     "gulp-dev": "node_modules/.bin/gulp dev"
   },

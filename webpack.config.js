@@ -2,7 +2,7 @@ const path = require('path');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 
 module.exports = {
-  entry: path.join(__dirname, 'client/index.jsx'),
+  entry: path.join(__dirname, 'noReact/index.jsx'),
   mode: process.env.NODE_ENV,
   output: {
     path: path.join(__dirname, '/build'),
