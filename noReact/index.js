@@ -1,18 +1,35 @@
 import * as d3 from 'd3';
 import styles from './styles/styles.scss';
 
-const ABILITY_SCORES = {
-  'STR': 5,
-  'DEX': 11,
-  'CON': 12,
-  'INT': 16,
-  'WIS': 18,
-  'CHA': 13
-};
+const ABILITY_SCORES = [
+  {
+    'STR': 5,
+    'DEX': 11,
+    'CON': 12,
+    'INT': 16,
+    'WIS': 18,
+    'CHA': 13
+  },
+  {
+    'STR': 8,
+    'DEX': 11,
+    'CON': 10,
+    'INT': 15,
+    'WIS': 12,
+    'CHA': 18
+  },
+  {
+    'STR': 13,
+    'DEX': 19,
+    'CON': 14,
+    'INT': 7,
+    'WIS': 16,
+    'CHA': 3
+  },
+];
 const LABELS = [
   'STR', 'DEX', 'CON', 'INT', 'WIS', 'CHA'
 ]
-const DATA = [];
 
 // Margins/styling data
 const margin = {top: 40, right: 40, bottom: 40, left: 40}
@@ -42,20 +59,23 @@ const graph = d3.select('#graph');
 const line = d3.lineRadial()
   .angle(d => angle(d[0]))
   .radius(d => radius(d[1]))
-  .curve(d3.curveCardinalClosed);
+  .curve(d3.curveLinearClosed);
 
 const aAxis = d3.line()
 
 // Populate data
-const populateData = () => {
-  let i = 0;
-  for (const attribute in ABILITY_SCORES) {
-    DATA.push([i, ABILITY_SCORES[attribute]]);
-    i++;
-  }
-};
+const populateData = (scores) => {
+  const result = [];
+  scores.forEach((character, i) => {
+    result.push([]);
+    for (const score in character) {
+      result[i].push([LABELS.indexOf(score), character[score]]);
+    }
+  });
+  return result;
+}
 
-populateData();
+const DATA = populateData(ABILITY_SCORES);
 
 // Adjust svg attributes
 graph.attr('margin', 20)
@@ -102,18 +122,26 @@ graph.selectAll('aAxes')
     translate(0, 40)`)
   });
   
-  
-    
-
 // Graph the line
-graph.append('g')
-  .datum(DATA)
+
+for (const character of DATA) {
+  let color = character.filter(pair => pair[1] >= 10);
+  console.log(color);
+  const coeff = 10;
+  const r = (color[0][1]*coeff).toString(16);
+  const g = (color[1][1]*coeff).toString(16);
+  const b = (color[2][1]*coeff).toString(16);
+  color = d3.color(`#${r}${g}${b}`);
+  console.log(color);
+  graph.append('g')
+  .datum(character)
   .attr('transform', center_transform)
   .call(g => {
     g.append('path')
-    .attr('fill', 'none')
-    .attr('stroke', '#782424')
+    .attr('fill', color.copy({opacity: 0.15}))
+    .attr('stroke', color)
     .attr('stroke-width', 2)
     .attr('d', line)
     .attr('transform', 'rotate(90)');
-  });
+  })
+}
