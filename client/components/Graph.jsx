@@ -76,6 +76,9 @@ const Graph = ({ abilityScores, generateColorFn, width, height, margin, axesColo
         .radius(d => radius(d[1]))
         .curve(curve);
 
+      // Remove old SVG
+      svg.selectAll('*').remove();
+
       // Graph radial (y) axis
       svg.selectAll('rAxes')
       .data(SCALE_R.steps).enter()
@@ -113,7 +116,7 @@ const Graph = ({ abilityScores, generateColorFn, width, height, margin, axesColo
           .attr('transform', `
           rotate(90, ${radius(25)}, 0)
           translate(0, 40)`)
-        });
+        }, [linear]);
 
         // Graph the line
         for (const character of data) {

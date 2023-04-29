@@ -1,8 +1,19 @@
 import React from 'react';
 
-const Toggles = (handleClick) => {
+const Toggles = ({ clickFunctions, labels }) => {
+  const toggles = [];
+  for (let i = 0; i < clickFunctions.length; i++) {
+    toggles.push(
+      <div className='toggle'>
+        {labels[i]}
+        <button className='toggle' onClick={(e) => clickFunctions[i](e)}/>
+      </div>
+    );
+  }
   return (
-    <button class="toggle" onClick={handleClick}/>
+    <div className='toggles'>
+      {toggles}  
+    </div>
   );
 };
 

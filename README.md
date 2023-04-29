@@ -13,3 +13,7 @@
 
 ## More Stretchy
 - Allow click-and-drag modification of graph data values
+
+# Todo
+- Style toggle switches
+- 

@@ -55,6 +55,8 @@ const Body = () => {
     'Tobias'
   ]);
 
+  const [linear, setLinear] = useState(true);
+
   const generateColorFn = (scores) => {
     const coeff = 10;
     let r = (scores[0] + scores[1] / 2)*coeff;
@@ -77,9 +79,17 @@ const Body = () => {
     );
   }
 
+  const clickFunctions = [
+    (e) => {setLinear(!linear);}
+  ];
+  const clickFunctionLabels = [
+    'linear'
+  ];
+
   return (
     <div id="body">
-      <Toggles />
+      <Toggles clickFunctions={clickFunctions} 
+        labels={clickFunctionLabels}/>
       <Graph 
         abilityScores={abilityScores}
         generateColorFn={generateColorFn}
@@ -87,7 +97,7 @@ const Body = () => {
         width={450}
         margin={{top: 40, right: 40, bottom: 40, left: 40}}
         axesColor='#575757'
-        linear={true}
+        linear={linear}
       />
       {characterInfoPanels}
       <AddCharacter />
