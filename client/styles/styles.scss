@@ -1,3 +1,19 @@
+@use './variables.scss';
+@use './characterInfo/characterInfo.scss';
+@use './characterInfo/addCharacter.scss';
+@use './graph/graph.scss';
+
+@font-face {
+  font-family: "dankMono";
+  src: url('../resources/dankMonoRegular.otf');
+}
+
 html {
-  background-color: #272727;
+  font-family: 'dankMono';
+  background-color: variables.$background-color;
+}
+
+#body {
+  display: flex;
+  flex-direction: column;
 }

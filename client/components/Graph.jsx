@@ -2,11 +2,38 @@ import React from 'react';
 import useD3 from '../hooks/useD3.jsx';
 import * as d3 from 'd3';
 
-const Graph = ({ abilityScores }) => {
-
-  const height = 450;
-  const width = 450;
-  const margin = {top: 40, right: 40, bottom: 40, left: 40}
+/**
+ * A React Graph component that uses d3 to create a radial area (radar) chart of the given data.
+ * Data should be formatted to represent ability scores of DnD characters as follows
+ * 
+ * [
+    {
+      'STR': 5,
+      'DEX': 11,
+      'CON': 12,
+      'INT': 16,
+      'WIS': 18,
+      'CHA': 13
+    },
+    {
+      'STR': 8,
+      'DEX': 11,
+      'CON': 10,
+      'INT': 15,
+      'WIS': 12,
+      'CHA': 18
+    },
+    {
+      'STR': 13,
+      'DEX': 19,
+      'CON': 14,
+      'INT': 7,
+      'WIS': 16,
+      'CHA': 3
+    },
+  ];
+ */
+const Graph = ({ abilityScores, generateColorFn, width, height, margin, axesColor, linear }) => {
 
   const populateData = (scores, labels) => {
     const result = [];
@@ -19,21 +46,13 @@ const Graph = ({ abilityScores }) => {
     return result;
   }
 
-  const generateColor = (scores) => {
-    const coeff = 10;
-    const r = ((scores[0][1] + scores[1][1] / 2)*coeff).toString(16);
-    const g = ((scores[2][1] + scores[3][1] / 2)*coeff).toString(16);
-    const b = ((scores[4][1] + scores[5][1] / 2)*coeff).toString(16);
-    return d3.color(`#${r}${g}${b}`);
-  }
-
   const ref = useD3(
     (svg) => {
       const labels = Object.keys(abilityScores[0]);
       const data = populateData(abilityScores, labels);
+      const curve = linear ? d3.curveLinearClosed : d3.curveCardinalClosed;
 
       // Margins/styling data
-
       const center_transform = `translate(${(height / 2) + margin.left}, ${(width / 2) + margin.top})`
 
       // Scales and Scale Data
@@ -55,20 +74,14 @@ const Graph = ({ abilityScores }) => {
       const line = d3.lineRadial()
         .angle(d => angle(d[0]))
         .radius(d => radius(d[1]))
-        .curve(d3.curveLinearClosed);
-
-        // Adjust svg attributes
-      svg.attr('margin', 20)
-      .attr('padding', 15)
-      .attr('height', height + margin.top + margin.bottom)
-      .attr('width', width + margin.left + margin.right);
+        .curve(curve);
 
       // Graph radial (y) axis
       svg.selectAll('rAxes')
       .data(SCALE_R.steps).enter()
       .append('circle')
         .attr('fill', 'none')
-        .attr('stroke', '#373737')
+        .attr('stroke', axesColor)
         .attr('stroke-width', 2)
         .attr('cx', 0)
         .attr('cy', 0)
@@ -86,15 +99,15 @@ const Graph = ({ abilityScores }) => {
         .call(g => {
           g.append('line')
           .attr('fill', 'none')
-          .attr('stroke', '#373737')
+          .attr('stroke', axesColor)
           .attr('stroke-width', 2)
           .attr('x2', radius(20))
         })
         .call(g => {
           g.append('text')
           .text(d => labels[d])
-          .attr('fill', '#373737')
-          .attr('stroke', '#373737')
+          .attr('fill', axesColor)
+          .attr('stroke', axesColor)
           .attr('x', radius(25))
           .attr('text-anchor', 'middle')
           .attr('transform', `
@@ -104,7 +117,7 @@ const Graph = ({ abilityScores }) => {
 
         // Graph the line
         for (const character of data) {
-          const color = generateColor(character);
+          const color = d3.color(generateColorFn(character.map(stat => stat[1])));
           svg.append('g')
           .datum(character)
           .attr('transform', center_transform)
@@ -119,16 +132,13 @@ const Graph = ({ abilityScores }) => {
         }
     });
   return (
-    <div id='graph'>
-      <svg id='graphArea'
-        ref = {ref}
-        style={{
-          height: height * 1.25,
-          width: width * 1.25,
-          border: '1px solid black'
-        }}
-        />
-    </div>
+    <svg id='graph'
+      ref = {ref}
+      style={{
+        height: height + margin.top + margin.bottom,
+        width: width + margin.left + margin.right,
+      }}
+      />
   );
 };
 

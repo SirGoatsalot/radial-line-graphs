@@ -1,0 +1,20 @@
+@use 'sass:color';
+
+@use '../variables.scss';
+
+#addCharacter {
+  width: 50px;
+  height: 50px;
+  background-color: transparent;
+  transition: background-color 0.25s;
+  border: 1px solid variables.$border-color;
+  border-radius: 5px;
+  color: variables.$primary-text-color;
+  align-self: center;
+  margin: 5px;
+}
+
+#addCharacter:hover {
+  background-color: color.scale(variables.$background-color, $lightness: 5%);
+  transition: background-color 0.25s;
+}

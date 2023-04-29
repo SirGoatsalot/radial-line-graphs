@@ -14,7 +14,7 @@ module.exports = {
       publicPath: '/build/bundle.js',
     },
     proxy: {
-      '/drinks': 'http://localhost:3000',
+      '/*': 'http://localhost:3000',
     },
     port: 8080,
     magicHtml: true,

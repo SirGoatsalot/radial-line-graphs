@@ -1,0 +1,42 @@
+@use '../variables.scss';
+
+.characterInfo {
+  display: flex;
+  flex-direction: column;
+  flex-wrap: wrap;
+  align-self: center;
+  text-align: center;
+  padding: 5px;
+  margin: 5px;
+  border-radius: 5px;
+  width: 490px;
+}
+
+.characterInfo div {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-evenly;
+}
+
+.stat {
+  display: flex;
+  flex-wrap: wrap;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  
+
+  h1 {
+    font-weight: bolder;
+    font-size: 100%;
+    padding: 0px;
+    margin: 0px;
+  }
+
+  p {
+    font-size: 150%;
+    padding: 0px;
+    margin: 0px;
+  }
+}
